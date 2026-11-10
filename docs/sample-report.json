@@ -1,0 +1,324 @@
+{
+  "meta": {
+    "nmap_version": "7.94",
+    "args": "nmap -sV --top-ports 1000 -T3 --open -oX - -- 192.0.2.0/24",
+    "start": "Mon Nov 10 19:00:00 2026",
+    "elapsed": "48.20",
+    "hosts_up": 5,
+    "hosts_down": 251
+  },
+  "summary": {
+    "Critical": 2,
+    "High": 3,
+    "Medium": 4,
+    "Low": 0,
+    "Info": 6
+  },
+  "hosts": [
+    {
+      "address": "192.0.2.30",
+      "hostnames": [
+        "app01.lab.example"
+      ],
+      "os_guess": "Linux 5.4",
+      "score": 9.9,
+      "band": "Critical",
+      "findings": [
+        {
+          "host": "192.0.2.30",
+          "port": 80,
+          "protocol": "tcp",
+          "service": "http",
+          "banner": "Apache httpd 2.4.49 ((Unix))",
+          "score": 9.8,
+          "band": "Critical",
+          "reasons": [
+            "2 CVE(s) reported by the vulners script, highest CVSS 9.8.",
+            "Web service without TLS: Unencrypted HTTP exposes content and any credentials sent to it."
+          ],
+          "remediation": [
+            "Redirect to HTTPS and enable HSTS.",
+            "Apply vendor patches for the listed CVEs, or upgrade the affected software."
+          ],
+          "cves": [
+            "CVE-2021-42013",
+            "CVE-2021-41773"
+          ]
+        },
+        {
+          "host": "192.0.2.30",
+          "port": 6379,
+          "protocol": "tcp",
+          "service": "redis",
+          "banner": "Redis key-value store 7.0.15",
+          "score": 8.0,
+          "band": "High",
+          "reasons": [
+            "Datastore commonly deployed without authentication: These services are often installed with no authentication and no network restriction."
+          ],
+          "remediation": [
+            "Bind to localhost or a private interface.",
+            "Enable authentication and TLS."
+          ],
+          "cves": []
+        },
+        {
+          "host": "192.0.2.30",
+          "port": 22,
+          "protocol": "tcp",
+          "service": "ssh",
+          "banner": "OpenSSH 8.9p1 (Ubuntu Linux; protocol 2.0)",
+          "score": 1.5,
+          "band": "Info",
+          "reasons": [
+            "SSH exposed: Expected for administration. Review key and algorithm policy."
+          ],
+          "remediation": [
+            "Use key-based auth.",
+            "Restrict to the admin network."
+          ],
+          "cves": []
+        }
+      ]
+    },
+    {
+      "address": "192.0.2.20",
+      "hostnames": [
+        "legacy01.lab.example"
+      ],
+      "os_guess": "Linux 3.x",
+      "score": 9.2,
+      "band": "Critical",
+      "findings": [
+        {
+          "host": "192.0.2.20",
+          "port": 23,
+          "protocol": "tcp",
+          "service": "telnet",
+          "banner": "Linux telnetd",
+          "score": 9.0,
+          "band": "Critical",
+          "reasons": [
+            "Telnet service exposed: Telnet sends credentials and sessions in clear text."
+          ],
+          "remediation": [
+            "Disable telnet and use SSH.",
+            "Block the port at the host firewall."
+          ],
+          "cves": []
+        },
+        {
+          "host": "192.0.2.20",
+          "port": 21,
+          "protocol": "tcp",
+          "service": "ftp",
+          "banner": "vsftpd 3.0.3",
+          "score": 7.0,
+          "band": "High",
+          "reasons": [
+            "FTP service exposed: Plain FTP sends credentials and data in clear text."
+          ],
+          "remediation": [
+            "Replace with SFTP or FTPS.",
+            "Disable anonymous access if it is not needed."
+          ],
+          "cves": []
+        },
+        {
+          "host": "192.0.2.20",
+          "port": 445,
+          "protocol": "tcp",
+          "service": "microsoft-ds",
+          "banner": "Samba smbd 4 (workgroup: LAB)",
+          "score": 6.0,
+          "band": "Medium",
+          "reasons": [
+            "SMB file sharing exposed: SMB has a long history of serious vulnerabilities and is used for lateral movement."
+          ],
+          "remediation": [
+            "Limit to required clients.",
+            "Disable SMBv1 and require signing."
+          ],
+          "cves": []
+        }
+      ]
+    },
+    {
+      "address": "192.0.2.10",
+      "hostnames": [
+        "web01.lab.example"
+      ],
+      "os_guess": "Linux 5.15 - 6.1",
+      "score": 7.5,
+      "band": "High",
+      "findings": [
+        {
+          "host": "192.0.2.10",
+          "port": 80,
+          "protocol": "tcp",
+          "service": "http",
+          "banner": "Apache httpd 2.2.34 ((Ubuntu))",
+          "score": 7.5,
+          "band": "High",
+          "reasons": [
+            "Apache HTTP Server 2.2 no longer receives security updates. (found Apache httpd 2.2.34 ((Ubuntu)))",
+            "Web service without TLS: Unencrypted HTTP exposes content and any credentials sent to it."
+          ],
+          "remediation": [
+            "Redirect to HTTPS and enable HSTS.",
+            "Upgrade to a supported Apache 2.4 release."
+          ],
+          "cves": []
+        },
+        {
+          "host": "192.0.2.10",
+          "port": 22,
+          "protocol": "tcp",
+          "service": "ssh",
+          "banner": "OpenSSH 9.6p1 (Ubuntu Linux; protocol 2.0)",
+          "score": 1.5,
+          "band": "Info",
+          "reasons": [
+            "SSH exposed: Expected for administration. Review key and algorithm policy."
+          ],
+          "remediation": [
+            "Use key-based auth.",
+            "Restrict to the admin network."
+          ],
+          "cves": []
+        },
+        {
+          "host": "192.0.2.10",
+          "port": 443,
+          "protocol": "tcp",
+          "service": "http",
+          "banner": "nginx 1.24.0",
+          "score": 1.0,
+          "band": "Info",
+          "reasons": [
+            "Open service with no specific risk rule. Confirm it is expected."
+          ],
+          "remediation": [],
+          "cves": []
+        }
+      ]
+    },
+    {
+      "address": "192.0.2.40",
+      "hostnames": [
+        "dc01.lab.example"
+      ],
+      "os_guess": "Microsoft Windows Server 2019",
+      "score": 6.7,
+      "band": "Medium",
+      "findings": [
+        {
+          "host": "192.0.2.40",
+          "port": 3389,
+          "protocol": "tcp",
+          "service": "ms-wbt-server",
+          "banner": "Microsoft Terminal Services",
+          "score": 6.5,
+          "band": "Medium",
+          "reasons": [
+            "RDP exposed: Exposed RDP is a common target for brute force and credential attacks."
+          ],
+          "remediation": [
+            "Restrict to a management network or VPN.",
+            "Enforce MFA and Network Level Authentication."
+          ],
+          "cves": []
+        },
+        {
+          "host": "192.0.2.40",
+          "port": 445,
+          "protocol": "tcp",
+          "service": "microsoft-ds",
+          "banner": "",
+          "score": 6.0,
+          "band": "Medium",
+          "reasons": [
+            "SMB file sharing exposed: SMB has a long history of serious vulnerabilities and is used for lateral movement."
+          ],
+          "remediation": [
+            "Limit to required clients.",
+            "Disable SMBv1 and require signing."
+          ],
+          "cves": []
+        },
+        {
+          "host": "192.0.2.40",
+          "port": 389,
+          "protocol": "tcp",
+          "service": "ldap",
+          "banner": "Microsoft Windows Active Directory LDAP (Domain: lab.example)",
+          "score": 4.5,
+          "band": "Medium",
+          "reasons": [
+            "LDAP without TLS: Clear-text LDAP can expose credentials and directory data."
+          ],
+          "remediation": [
+            "Require LDAPS or StartTLS and disable simple binds over clear text."
+          ],
+          "cves": []
+        },
+        {
+          "host": "192.0.2.40",
+          "port": 53,
+          "protocol": "tcp",
+          "service": "domain",
+          "banner": "",
+          "score": 1.0,
+          "band": "Info",
+          "reasons": [
+            "Open service with no specific risk rule. Confirm it is expected."
+          ],
+          "remediation": [],
+          "cves": []
+        },
+        {
+          "host": "192.0.2.40",
+          "port": 88,
+          "protocol": "tcp",
+          "service": "kerberos-sec",
+          "banner": "Microsoft Windows Kerberos (server time: 2026-11-10 19:00:00Z)",
+          "score": 1.0,
+          "band": "Info",
+          "reasons": [
+            "Open service with no specific risk rule. Confirm it is expected."
+          ],
+          "remediation": [],
+          "cves": []
+        }
+      ]
+    },
+    {
+      "address": "192.0.2.50",
+      "hostnames": [
+        "util01.lab.example"
+      ],
+      "os_guess": "Linux 6.x",
+      "score": 1.5,
+      "band": "Info",
+      "findings": [
+        {
+          "host": "192.0.2.50",
+          "port": 22,
+          "protocol": "tcp",
+          "service": "ssh",
+          "banner": "OpenSSH 9.6p1 (Ubuntu Linux; protocol 2.0)",
+          "score": 1.5,
+          "band": "Info",
+          "reasons": [
+            "SSH exposed: Expected for administration. Review key and algorithm policy."
+          ],
+          "remediation": [
+            "Use key-based auth.",
+            "Restrict to the admin network."
+          ],
+          "cves": []
+        }
+      ]
+    }
+  ]
+}

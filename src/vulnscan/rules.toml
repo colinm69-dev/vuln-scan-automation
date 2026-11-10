@@ -1,0 +1,162 @@
+# Prioritisation rules. Scores are 0-10 and express exposure risk, not proof of a vulnerability.
+# Edit freely: add rules for your own environment. Version rules are illustrative; check vendor
+# lifecycle pages before relying on them.
+
+[[rule]]
+id = "telnet"
+title = "Telnet service exposed"
+ports = [23]
+services = ["telnet"]
+score = 9.0
+cleartext = true
+rationale = "Telnet sends credentials and sessions in clear text."
+remediation = ["Disable telnet and use SSH.", "Block the port at the host firewall."]
+
+[[rule]]
+id = "r-services"
+title = "Legacy r-services exposed"
+ports = [512, 513, 514]
+services = ["exec", "login", "shell"]
+score = 9.0
+cleartext = true
+rationale = "rsh/rlogin/rexec rely on weak host-based trust and clear-text traffic."
+remediation = ["Disable the r-services and use SSH."]
+
+[[rule]]
+id = "ftp"
+title = "FTP service exposed"
+ports = [21]
+services = ["ftp"]
+score = 7.0
+cleartext = true
+rationale = "Plain FTP sends credentials and data in clear text."
+remediation = ["Replace with SFTP or FTPS.", "Disable anonymous access if it is not needed."]
+
+[[rule]]
+id = "tftp"
+title = "TFTP service exposed"
+ports = [69]
+services = ["tftp"]
+score = 7.0
+protocols = ["udp"]
+rationale = "TFTP has no authentication."
+remediation = ["Restrict to the provisioning network or disable it."]
+
+[[rule]]
+id = "vnc"
+title = "VNC remote desktop exposed"
+ports = [5900, 5901]
+services = ["vnc"]
+score = 7.0
+rationale = "VNC is often weakly authenticated and frequently unencrypted."
+remediation = ["Tunnel through SSH or a VPN.", "Require strong authentication."]
+
+[[rule]]
+id = "rdp"
+title = "RDP exposed"
+ports = [3389]
+services = ["ms-wbt-server"]
+score = 6.5
+rationale = "Exposed RDP is a common target for brute force and credential attacks."
+remediation = ["Restrict to a management network or VPN.", "Enforce MFA and Network Level Authentication."]
+
+[[rule]]
+id = "smb"
+title = "SMB file sharing exposed"
+ports = [139, 445]
+services = ["microsoft-ds", "netbios-ssn"]
+score = 6.0
+rationale = "SMB has a long history of serious vulnerabilities and is used for lateral movement."
+remediation = ["Limit to required clients.", "Disable SMBv1 and require signing."]
+
+[[rule]]
+id = "unauth-datastores"
+title = "Datastore commonly deployed without authentication"
+ports = [6379, 27017, 11211, 9200, 5984]
+services = ["redis", "mongodb", "memcached", "elasticsearch", "couchdb"]
+score = 8.0
+rationale = "These services are often installed with no authentication and no network restriction."
+remediation = ["Bind to localhost or a private interface.", "Enable authentication and TLS."]
+
+[[rule]]
+id = "databases"
+title = "Database service reachable over the network"
+ports = [3306, 5432, 1433, 1521]
+services = ["mysql", "postgresql", "ms-sql-s", "oracle-tns"]
+score = 6.5
+rationale = "Databases should only be reachable from the application tier."
+remediation = ["Restrict access with host or network firewall rules.", "Require TLS and strong credentials."]
+
+[[rule]]
+id = "snmp"
+title = "SNMP exposed"
+ports = [161]
+services = ["snmp"]
+protocols = ["udp"]
+score = 5.5
+rationale = "SNMP v1/v2c uses community strings in clear text and can leak configuration."
+remediation = ["Use SNMPv3.", "Restrict to the monitoring host."]
+
+[[rule]]
+id = "rpcbind"
+title = "RPC portmapper exposed"
+ports = [111]
+services = ["rpcbind"]
+score = 5.0
+rationale = "The portmapper reveals which RPC services (such as NFS) are running."
+remediation = ["Disable if NFS/NIS are not needed.", "Restrict by firewall."]
+
+[[rule]]
+id = "ldap-clear"
+title = "LDAP without TLS"
+ports = [389]
+services = ["ldap"]
+score = 4.5
+cleartext = true
+rationale = "Clear-text LDAP can expose credentials and directory data."
+remediation = ["Require LDAPS or StartTLS and disable simple binds over clear text."]
+
+[[rule]]
+id = "http-clear"
+title = "Web service without TLS"
+ports = [80, 8080]
+services = ["http", "http-proxy", "http-alt"]
+score = 3.0
+cleartext = true
+rationale = "Unencrypted HTTP exposes content and any credentials sent to it."
+remediation = ["Redirect to HTTPS and enable HSTS."]
+
+[[rule]]
+id = "smtp"
+title = "SMTP exposed"
+ports = [25]
+services = ["smtp"]
+score = 3.0
+rationale = "Check that relaying is closed and TLS is offered."
+remediation = ["Disable open relay.", "Offer STARTTLS."]
+
+[[rule]]
+id = "ssh"
+title = "SSH exposed"
+ports = [22]
+services = ["ssh"]
+score = 1.5
+rationale = "Expected for administration. Review key and algorithm policy."
+remediation = ["Use key-based auth.", "Restrict to the admin network."]
+
+# Illustrative end-of-life product checks. Matching is on product name and version prefix.
+[[eol]]
+id = "eol-apache-22"
+product = "Apache httpd"
+version_prefixes = ["2.2."]
+score = 7.5
+rationale = "Apache HTTP Server 2.2 no longer receives security updates."
+remediation = ["Upgrade to a supported Apache 2.4 release."]
+
+[[eol]]
+id = "eol-php-5"
+product = "PHP"
+version_prefixes = ["5."]
+score = 7.5
+rationale = "PHP 5.x no longer receives security updates."
+remediation = ["Upgrade to a supported PHP release."]
